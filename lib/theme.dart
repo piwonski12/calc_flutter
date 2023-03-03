@@ -2,28 +2,28 @@ import 'package:flutter/material.dart';
 
 class AppStyles {
   static final TextStyle buttonTextStyle = TextStyle(
-    fontSize: 24,
-    fontWeight: FontWeight.bold,
+    fontSize: 42,
+    fontWeight: FontWeight.w400,
     color: Colors.white,
   );
 
   static final ButtonStyle numberButtonStyle = ElevatedButton.styleFrom(
-    primary: Colors.grey[300],
-    onPrimary: Colors.black,
-    padding: EdgeInsets.symmetric(vertical: 16),
+    primary: Colors.white12,
+    onPrimary: Color(0x0FFe4d5b7),
+    padding: const EdgeInsets.all(20.0),
     textStyle: buttonTextStyle,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16),
+      borderRadius: BorderRadius.circular(100),
     ),
   );
 
   static final ButtonStyle operationButtonStyle = ElevatedButton.styleFrom(
-    primary: Colors.grey,
-    onPrimary: Colors.black,
-    padding: EdgeInsets.symmetric(vertical: 45),
+    primary: Colors.white12,
+    onPrimary: Color(0x0FFe4d5b7),
+    padding: const EdgeInsets.all(20.0),
     textStyle: buttonTextStyle,
     shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(16.5),
+      borderRadius: BorderRadius.circular(100),
     ),
   );
 
