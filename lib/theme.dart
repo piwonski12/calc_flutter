@@ -7,19 +7,9 @@ class AppStyles {
     color: Colors.white,
   );
 
-  static final ButtonStyle numberButtonStyle = ElevatedButton.styleFrom(
-    primary: Colors.white12,
-    onPrimary: Color(0x0FFe4d5b7),
-    padding: const EdgeInsets.all(20.0),
-    textStyle: buttonTextStyle,
-    shape: RoundedRectangleBorder(
-      borderRadius: BorderRadius.circular(100),
-    ),
-  );
-
   static final ButtonStyle operationButtonStyle = ElevatedButton.styleFrom(
-    primary: Colors.white12,
-    onPrimary: Color(0x0FFe4d5b7),
+    backgroundColor: Colors.white12,
+    foregroundColor: Colors.white,
     padding: const EdgeInsets.all(20.0),
     textStyle: buttonTextStyle,
     shape: RoundedRectangleBorder(
@@ -27,4 +17,23 @@ class AppStyles {
     ),
   );
 
+  static final ButtonStyle top_bttn = ElevatedButton.styleFrom(
+    backgroundColor: Colors.grey,
+    foregroundColor: Colors.black,
+    padding: const EdgeInsets.all(20.0),
+    textStyle: buttonTextStyle,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(100),
+    ),
+  );
+
+  static final ButtonStyle right_bttn = ElevatedButton.styleFrom(
+    backgroundColor: Colors.orange,
+    foregroundColor: Colors.white,
+    padding: const EdgeInsets.all(20.0),
+    textStyle: buttonTextStyle,
+    shape: RoundedRectangleBorder(
+      borderRadius: BorderRadius.circular(100),
+    ),
+  );
 }

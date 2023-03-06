@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:untitled/theme.dart';
 
 
@@ -8,10 +9,11 @@ void main() {
 
 class MyApp extends StatefulWidget {
   MyApp({Key? key});
-
   @override
   State<MyApp> createState() => _MyAppState();
 }
+
+
 
 class _MyAppState extends State<MyApp> {
   double num = 0;
@@ -19,21 +21,46 @@ class _MyAppState extends State<MyApp> {
   String oper = "";
   double res = 0;
 
+  GlobalKey _appBarKey = GlobalKey();
+// alert o kopiowaniu tekstu nie działą
+  void onTextCopied(){
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        // set up the button
+        Widget okButton = TextButton(
+          child: Text("OK"),
+          onPressed: () { Navigator.pop(context); },
+        );
+
+        // set up the AlertDialog
+        AlertDialog alert = AlertDialog(
+          title: Text("Skopiowano!"),
+          content: Text("Tekst został skopiowany do schowka."),
+          actions: [
+            okButton,
+          ],
+        );
+
+        return alert;
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       theme: ThemeData(
-        primarySwatch: Colors.cyan,
         scaffoldBackgroundColor: Colors.black,
         appBarTheme: const AppBarTheme(
-          color: Colors.white12,
+          color: Colors.black,
         )
       ),
         title: 'My App',
         home: Scaffold(
             appBar: AppBar(
-              title: Image.asset("assets/logo.png")  ,
+              leading: Image.network('https://www.clipartmax.com/png/full/123-1230730_31678365-350-dragon-aesthetic-art.png'),
               elevation: 0.0,
             ),
             body: Column(
@@ -43,11 +70,18 @@ class _MyAppState extends State<MyApp> {
                     color: Colors.black,
                     alignment: Alignment.bottomRight,
                     padding: EdgeInsets.all(16.0),
-                    child: Text(
+                    child:
+                        GestureDetector(
+                          onTap: () async {
+                            await Clipboard.setData(ClipboardData(text: strnum));
+                            onTextCopied();
+                          },
+                          child: Text(
                       strnum.isEmpty ? '0' : strnum,
-                      style: const TextStyle(fontSize: 90.0,
-                      color: Color(0x0FFe4d5b7)),
+                      style: const TextStyle(fontSize: 110.0,
+                      color: Colors.white),
                     ),
+            ),
                   ),
                 ),
                 Container(
@@ -62,22 +96,19 @@ class _MyAppState extends State<MyApp> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: buildElevatedButton('AC'),
+                  child: buildElevatedButton( reset , 'AC', AppStyles.top_bttn),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: ElevatedButton(onPressed: tggl_sign, child: Text('+/-'), style: AppStyles.operationButtonStyle, ),
+                  child: buildElevatedButton(tggl_sign, "+/-", AppStyles.top_bttn),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: ElevatedButton(onPressed: () => set_oper('%'), child: Text('%'), style: AppStyles.operationButtonStyle,),
+                    child: buildElevatedButton(()=> set_oper('%'), "%", AppStyles.top_bttn),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: ElevatedButton(onPressed: () => set_oper('/'), child: Text('÷'), style: AppStyles.operationButtonStyle,),
+                    child: buildElevatedButton(()=> set_oper('/'), "÷", AppStyles.right_bttn),
                 ),
               ],
             ),
@@ -85,22 +116,19 @@ class _MyAppState extends State<MyApp> {
               children: [
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: ElevatedButton(onPressed: () => func(7), child: Text('7'), style: AppStyles.operationButtonStyle,),
+                  child: buildElevatedButton(()=> func(7), "7", style_bttn),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: ElevatedButton(onPressed: () => func(8), child: Text('8'), style: AppStyles.operationButtonStyle,),
+                  child: buildElevatedButton(()=> func(8), "8", style_bttn),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: ElevatedButton(onPressed: () => func(9), child: Text('9'), style: AppStyles.operationButtonStyle,),
+                  child: buildElevatedButton(()=> func(9), "9", style_bttn),
                 ),
-
                 Padding(
                   padding: const EdgeInsets.all(4.0),
-                  child: ElevatedButton(onPressed: () => set_oper('*'), child: Text('×'), style: AppStyles.operationButtonStyle,),
+                  child: buildElevatedButton(()=> set_oper('*'), "×", AppStyles.right_bttn),
                 ),
               ],
             ),
@@ -108,22 +136,19 @@ class _MyAppState extends State<MyApp> {
                 children: [
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(onPressed: () => func(4), child: Text('4'), style: AppStyles.operationButtonStyle,),
+                    child: buildElevatedButton(() => func(4), "4", style_bttn),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(onPressed: () => func(5), child: Text('5'), style: AppStyles.operationButtonStyle,),
+                    child: buildElevatedButton(() => func(5), "5", style_bttn),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(onPressed: () => func(6), child: Text('6'), style: AppStyles.operationButtonStyle,),
+                    child: buildElevatedButton(() => func(6), "6", style_bttn),
                   ),
-
                   Padding(
                     padding: const EdgeInsets.all(4.0),
-                    child: ElevatedButton(onPressed: () => set_oper('-'), child: Text('-'), style: AppStyles.operationButtonStyle,),
+                    child: buildElevatedButton(() => set_oper('-'), "-", AppStyles.right_bttn),
                   ),
                 ],
             ),
@@ -131,22 +156,19 @@ class _MyAppState extends State<MyApp> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: ElevatedButton(onPressed: () => func(1), child: Text('1'), style: AppStyles.operationButtonStyle,),
+                                child: buildElevatedButton(() => func(1), "1", style_bttn),
                               ),
-
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: ElevatedButton(onPressed: () => func(2), child: Text('2'), style: AppStyles.operationButtonStyle,),
+                                child: buildElevatedButton(() => func(2), "2", style_bttn),
                               ),
-
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: ElevatedButton(onPressed: () => func(3), child: Text('3'), style: AppStyles.operationButtonStyle,),
+                                child: buildElevatedButton(() => func(3), "3", style_bttn),
                               ),
-
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: ElevatedButton(onPressed: () => set_oper('+'), child: Text('+'), style: AppStyles.operationButtonStyle,),
+                                child: buildElevatedButton(() => set_oper('+'), "+", AppStyles.right_bttn),
                               ),
                             ],
                           ),
@@ -154,20 +176,19 @@ class _MyAppState extends State<MyApp> {
                             children: [
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: ElevatedButton(onPressed: () => func(0), child: Text('0'), style: AppStyles.operationButtonStyle,),
-                              ),
-
-                              Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: ElevatedButton(onPressed: () => func_decimal(), child: Text('.'), style: AppStyles.operationButtonStyle,),
+                                child: buildElevatedButton(() => func(0), "0", style_bttn),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: ElevatedButton(onPressed: () => set_oper('**'), child: Text('^'), style: AppStyles.operationButtonStyle,),
+                                child: buildElevatedButton(() => func_decimal(), ".", style_bttn),
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: ElevatedButton(onPressed: calculate, child: Text('='), style: AppStyles.operationButtonStyle,),
+                                  child: buildElevatedButton(()=> set_oper('**'), "^", style_bttn)
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: buildElevatedButton( calculate1 , '=', AppStyles.right_bttn),
                               ),
                             ],
                           ),
@@ -181,7 +202,15 @@ class _MyAppState extends State<MyApp> {
 
   }
 
-  ElevatedButton buildElevatedButton(String text) => ElevatedButton(onPressed:  reset, style: AppStyles.operationButtonStyle, child: Text(text),);
+  final ButtonStyle style_bttn = AppStyles.operationButtonStyle;
+
+  Widget buildElevatedButton(GestureTapCallback onPressed, String buttonText, ButtonStyle buttonStyle) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      child: Text(buttonText),
+      style: buttonStyle,
+    );
+  }
 
   void func(int n) {
     setState(() {
@@ -232,6 +261,33 @@ class _MyAppState extends State<MyApp> {
         res = num * second_num;
       }
 
+      strnum = res.toString();
+    });
+  }
+// nw czy lepiej if, elseif czy case
+  void calculate1() {
+    setState(() {
+      double second_num = double.parse(strnum);
+      switch(oper) {
+        case "+":
+          res = num + second_num;
+          break;
+        case "-":
+          res = num - second_num;
+          break;
+        case "*":
+          res = num * second_num;
+          break;
+        case "/":
+          res = num / second_num;
+          break;
+        case "%":
+          res = num/100 * second_num;
+          break;
+        case "**":
+          res = num * second_num;
+          break;
+      }
       strnum = res.toString();
     });
   }
