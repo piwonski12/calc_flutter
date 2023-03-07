@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 class AppStyles {
   static final TextStyle buttonTextStyle = TextStyle(
-    fontSize: 42,
-    fontWeight: FontWeight.w400,
     color: Colors.white,
   );
 
@@ -37,3 +35,4 @@ class AppStyles {
     ),
   );
 }
+

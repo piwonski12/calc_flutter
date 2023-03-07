@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:untitled/theme.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+
 
 
 void main() {
@@ -59,10 +61,6 @@ class _MyAppState extends State<MyApp> {
       ),
         title: 'My App',
         home: Scaffold(
-            appBar: AppBar(
-              leading: Image.network('https://www.clipartmax.com/png/full/123-1230730_31678365-350-dragon-aesthetic-art.png'),
-              elevation: 0.0,
-            ),
             body: Column(
               children: [
                 Expanded(
@@ -79,7 +77,8 @@ class _MyAppState extends State<MyApp> {
                           child: Text(
                       strnum.isEmpty ? '0' : strnum,
                       style: const TextStyle(fontSize: 110.0,
-                      color: Colors.white),
+                      color: Colors.white,
+                      ),
                     ),
             ),
                   ),
@@ -184,11 +183,11 @@ class _MyAppState extends State<MyApp> {
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                  child: buildElevatedButton(()=> set_oper('**'), "^", style_bttn)
+                                  child: buildElevatedButton(()=> set_oper('**'), '^', style_bttn)
                               ),
                               Padding(
                                 padding: const EdgeInsets.all(4.0),
-                                child: buildElevatedButton( calculate1 , '=', AppStyles.right_bttn),
+                                child: buildElevatedButton( calculate , '=', AppStyles.right_bttn),
                               ),
                             ],
                           ),
@@ -207,10 +206,15 @@ class _MyAppState extends State<MyApp> {
   Widget buildElevatedButton(GestureTapCallback onPressed, String buttonText, ButtonStyle buttonStyle) {
     return ElevatedButton(
       onPressed: onPressed,
-      child: Text(buttonText),
+      //child: Text(buttonText),
+      child: AutoSizeText(buttonText,
+      style: TextStyle(fontSize: 40),
+      maxLines: 1,),
       style: buttonStyle,
     );
   }
+
+
 
   void func(int n) {
     setState(() {
@@ -259,34 +263,6 @@ class _MyAppState extends State<MyApp> {
         res = num % second_num;
       } else if (oper == "**") {
         res = num * second_num;
-      }
-
-      strnum = res.toString();
-    });
-  }
-// nw czy lepiej if, elseif czy case
-  void calculate1() {
-    setState(() {
-      double second_num = double.parse(strnum);
-      switch(oper) {
-        case "+":
-          res = num + second_num;
-          break;
-        case "-":
-          res = num - second_num;
-          break;
-        case "*":
-          res = num * second_num;
-          break;
-        case "/":
-          res = num / second_num;
-          break;
-        case "%":
-          res = num/100 * second_num;
-          break;
-        case "**":
-          res = num * second_num;
-          break;
       }
       strnum = res.toString();
     });
