@@ -1,20 +1,206 @@
+import 'package:elegant_notification/elegant_notification.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:untitled/theme.dart';
+import 'dart:math';
 
-class Calculator extends StatefulWidget{
+class Calculator extends StatefulWidget {
+  const Calculator({Key? key}) : super(key: key);
+
+  @override
+  State<Calculator> createState() => _CalculatorState();
+}
+
+class _CalculatorState extends State<Calculator> {
   double num = 0;
   String strnum = "";
   String oper = "";
   double res = 0;
 
-  final ButtonStyle style_bttn = AppStyles.operationButtonStyle;
-
-  Widget buildElevatedButton(GestureTapCallback onPressed, String buttonText, ButtonStyle buttonStyle) {
-    return ElevatedButton(
-      onPressed: onPressed,
-      child: Text(buttonText),
-      style: buttonStyle,
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      theme: ThemeData(
+          scaffoldBackgroundColor: Colors.black,
+          appBarTheme: const AppBarTheme(
+            color: Colors.black,
+          )),
+      title: 'My App',
+      home: Scaffold(
+        body: Column(
+          children: [
+            Expanded(
+              child: Container(
+                color: Colors.black,
+                alignment: Alignment.bottomRight,
+                padding: const EdgeInsets.all(0.5),
+                child: GestureDetector(
+                  onTap: () async {
+                    await Clipboard.setData(ClipboardData(
+                        text: strnum.replaceAll(RegExp(r"([.]*[0]*)$"), "")));
+                    onTextCopied();
+                  },
+                  child: RichText(
+                    text: TextSpan(
+                      text: strnum.isEmpty
+                          ? '0'
+                          : strnum.replaceAll(RegExp(r"([.]*[0]*)$"), ""),
+                      style: const TextStyle(
+                        fontSize: 110.0,
+                        color: Colors.white,
+                      ),
+                    ),
+                    maxLines: 2,
+                    overflow: TextOverflow.fade,
+                  ),
+                ),
+              ),
+            ),
+            Container(
+              margin: const EdgeInsets.all(5),
+              width: double.infinity,
+              color: Colors.black,
+              alignment: Alignment.center,
+              child: Table(
+                children: [
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: buildElevatedButton(
+                            reset, 'AC', AppStyles.top_bttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(1.0),
+                        child: buildElevatedButton(
+                            tgglSign, "+/-", AppStyles.top_bttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: buildElevatedButton(
+                            () => setOper('%'), "%", AppStyles.top_bttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: buildElevatedButton(
+                            () => setOper('/'), "÷", AppStyles.right_bttn),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(7), "7", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(8), "8", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(9), "9", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: buildElevatedButton(
+                            () => setOper('*'), "×", AppStyles.right_bttn),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(4), "4", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(5), "5", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(6), "6", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: buildElevatedButton(
+                            () => setOper('-'), "-", AppStyles.right_bttn),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(1), "1", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(2), "2", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(3), "3", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: buildElevatedButton(
+                            () => setOper('+'), "+", AppStyles.right_bttn),
+                      ),
+                    ],
+                  ),
+                  TableRow(
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child:
+                            buildElevatedButton(() => func(0), "0", styleBttn),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: buildElevatedButton(
+                            () => funcDecimal(), ".", styleBttn),
+                      ),
+                      Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: buildElevatedButton(
+                              () => setOper('**'), '^', styleBttn)),
+                      Padding(
+                        padding: const EdgeInsets.all(4.0),
+                        child: buildElevatedButton(
+                            calculate, '=', AppStyles.right_bttn),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
+  final ButtonStyle styleBttn = AppStyles.operationButtonStyle;
+
+  Widget buildElevatedButton(GestureTapCallback onPressed, String buttonText,
+      ButtonStyle buttonStyle) {
+    return ElevatedButton(
+      onPressed: onPressed,
+      style: buttonStyle,
+      child: Text(buttonText),
+    );
+  }
 
   void func(int n) {
     setState(() {
@@ -22,7 +208,7 @@ class Calculator extends StatefulWidget{
     });
   }
 
-  void func_decimal() {
+  void funcDecimal() {
     setState(() {
       if (!strnum.contains(".")) {
         strnum += ".";
@@ -30,17 +216,17 @@ class Calculator extends StatefulWidget{
     });
   }
 
-  void tggl_sign() {
+  void tgglSign() {
     setState(() {
       if (strnum.startsWith("-")) {
         strnum = strnum.substring(1);
       } else {
-        strnum = "-" + strnum;
+        strnum = "-$strnum";
       }
     });
   }
 
-  void set_oper(String op) {
+  void setOper(String op) {
     setState(() {
       oper = op;
       num = double.parse(strnum);
@@ -50,22 +236,43 @@ class Calculator extends StatefulWidget{
 
   void calculate() {
     setState(() {
-      double second_num = double.parse(strnum);
+      double secondNum = double.parse(strnum);
       if (oper == "+") {
-        res = num + second_num;
+        res = num + secondNum;
       } else if (oper == "-") {
-        res = num - second_num;
+        res = num - secondNum;
       } else if (oper == "*") {
-        res = num * second_num;
+        res = num * secondNum;
       } else if (oper == "/") {
-        res = num / second_num;
+        res = num / secondNum;
       } else if (oper == "%") {
-        res = num % second_num;
+        res = num % secondNum;
       } else if (oper == "**") {
-        res = num * second_num;
+        res = res = pow(num, secondNum).toDouble();
       }
-      strnum = res.toString();
+      if (res.isFinite) {
+        setState(() {
+          strnum = res.toStringAsFixed(3);
+          num = res;
+          oper = "";
+        });
+      } else {
+        setState(() {
+          reset();
+        });
+        ElegantNotification.error(
+                title: const Text("Error"),
+                description: const Text("Result unavailable."))
+            .show(context);
+      }
     });
+  }
+
+  void onTextCopied() {
+    ElegantNotification.success(
+            title: const Text("Success"),
+            description: const Text("Result has been copied to the clipboard."))
+        .show(context);
   }
 
   void reset() {
@@ -76,142 +283,4 @@ class Calculator extends StatefulWidget{
       res = 0;
     });
   }
-
-  return Scaffold(
-  body: Column(
-  children: [
-  Expanded(
-  child: Container(
-  color: Colors.black,
-  alignment: Alignment.bottomRight,
-  padding: EdgeInsets.all(0.5),
-  child:
-  GestureDetector(
-  onTap: () async {
-  await Clipboard.setData(ClipboardData(text: strnum));
-  onTextCopied();
-},
-child: Text(
-strnum.isEmpty ? '0' : strnum,
-style: const TextStyle(fontSize: 110.0,
-color: Colors.white,
-),
-),
-),
-),
-),
-Container(
-margin: EdgeInsets.all(5),
-width: double.infinity,
-color: Colors.black,
-alignment: Alignment.center,
-child: Table(
-//ad. do dodania puste table row zeby odstepy byly i ogarniecie tych sizedboxow i stylowania i innych rzeczy, ktore nie dzialaja
-children: [
-TableRow(
-children: [
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton( reset , 'AC', AppStyles.top_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(tggl_sign, "+/-", AppStyles.top_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(()=> set_oper('%'), "%", AppStyles.top_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(()=> set_oper('/'), "÷", AppStyles.right_bttn),
-),
-],
-),
-TableRow(
-children: [
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(()=> func(7), "7", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(()=> func(8), "8", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(()=> func(9), "9", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(()=> set_oper('*'), "×", AppStyles.right_bttn),
-),
-],
-),
-TableRow(
-children: [
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => func(4), "4", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => func(5), "5", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => func(6), "6", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => set_oper('-'), "-", AppStyles.right_bttn),
-),
-],
-),
-TableRow(
-children: [
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => func(1), "1", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => func(2), "2", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => func(3), "3", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => set_oper('+'), "+", AppStyles.right_bttn),
-),
-],
-),
-TableRow(
-children: [
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => func(0), "0", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(() => func_decimal(), ".", style_bttn),
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton(()=> set_oper('**'), '^', style_bttn)
-),
-Padding(
-padding: const EdgeInsets.all(4.0),
-child: buildElevatedButton( calculate , '=', AppStyles.right_bttn),
-),
-],
-),
-],
-),
-),
-],
-),
-),
 }
