@@ -25,7 +25,7 @@ class _CalculatorState extends State<Calculator> {
           appBarTheme: const AppBarTheme(
             color: Colors.black,
           )),
-      title: 'My App',
+      title: 'Calculator',
       home: Scaffold(
         body: Column(
           children: [
